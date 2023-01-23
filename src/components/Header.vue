@@ -2,6 +2,7 @@
   <header>
     <h2>{{ heading }}</h2>
     <Button
+      v-show="isHomePage"
       :color="showAddForm ? 'orangered' : 'green'"
       :toggleShowAdd="toggleShowAdd"
       :text="showAddForm ? 'Close' : '+ Add'"
@@ -20,6 +21,11 @@ export default {
   },
   components: {
     Button,
+  },
+  computed: {
+    isHomePage() {
+      return this.$route.path === "/";
+    },
   },
 };
 </script>

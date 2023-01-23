@@ -1,3 +1,4 @@
 <template>
-  <h2>About [ME]</h2>
+  <p>About Us</p>
+  <router-link to="/">Back</router-link>
 </template>

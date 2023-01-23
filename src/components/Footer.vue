@@ -1,14 +1,18 @@
 <template>
   <footer>
-    All Rights &copy; {{ new Date().getFullYear() }} <br /><a href="/q-n-a"
-      >Q & A</a
-    >
+    All Rights &copy; {{ new Date().getFullYear() }} <br />
+    <router-link v-show="isHomePage" to="/q-n-a">Q & A</router-link>
   </footer>
 </template>
 
 <script>
 export default {
   name: "Footer",
+  computed: {
+    isHomePage() {
+      return this.$route.path === "/";
+    },
+  },
 };
 </script>
 
