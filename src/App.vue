@@ -21,6 +21,8 @@
     >
       No records yet
     </p>
+    <Footer />
+    <router-view></router-view>
   </div>
 </template>
 
@@ -28,6 +30,7 @@
 import Header from "./components/Header";
 import Tasks from "./components/Tasks";
 import Add from "./components/Add";
+import Footer from "./components/Footer";
 
 export default {
   name: "App",
@@ -35,6 +38,7 @@ export default {
     Header,
     Tasks,
     Add,
+    Footer,
   },
   data() {
     return {
@@ -43,48 +47,74 @@ export default {
     };
   },
   methods: {
-    addTask(task) {
+    async addTask(task) {
+      const res = await fetch("tasks", {
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(task),
+        method: "POST",
+      });
+      if (res.status !== 201) {
+        alert("Error creating a new item");
+        return;
+      }
       this.tasks = [...this.tasks, task];
     },
     toggleShowAdd() {
       this.showAddForm = !this.showAddForm;
     },
-    handleDelete(id) {
-      this.tasks = this.tasks.filter((task) => task.id !== id);
+    async handleDelete(id) {
+      if (confirm("Sure you want to delete this record?")) {
+        const res = await fetch(`tasks/${id}`, {
+          method: "DELETE",
+        });
+        if (res.status !== 200) {
+          alert("Error deleting record");
+          return;
+        }
+        this.tasks = this.tasks.filter((task) => task.id !== id);
+      }
     },
-    toggleReminder(id) {
+    async toggleReminder(id) {
+      const data = await this.fetchItem(id);
+      const res = await fetch(`tasks/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...data, reminder: !data.reminder }),
+      });
+      if (res.status !== 200) {
+        alert("Error updating record");
+        return;
+      }
       this.tasks = this.tasks.map((task) =>
         task.id === id ? { ...task, reminder: !task.reminder } : task
       );
     },
+    async fetchRecords() {
+      const res = await fetch("tasks");
+      if (res.status !== 200) {
+        alert("Error while fetching records");
+        return;
+      }
+      const data = await res.json();
+      this.tasks = data;
+    },
+    async fetchItem(id) {
+      const res = await fetch(`tasks/${id}`);
+      if (res.status !== 200) {
+        alert("Error while fetching record");
+        return;
+      }
+      const data = await res.json();
+      return data;
+    },
   },
   created() {
-    this.tasks = [
-      // {
-      //   id: 1,
-      //   text: "Buy groceries",
-      //   day: "March 1st at 3:15pm",
-      //   reminder: true,
-      // },
-      // {
-      //   id: 2,
-      //   text: "Meet with John",
-      //   day: "March 2nd at 10:00am",
-      //   reminder: true,
-      // },
-      // {
-      //   id: 3,
-      //   text: "Complete project report",
-      //   day: "March 3rd at 5:00pm",
-      //   reminder: false,
-      // },
-      // {
-      //   id: 4,
-      //   text: "Pay rent",
-      //   day: "March 4th at 12:00pm",
-      //   reminder: true,
-      // },
-    ];
+    this.tasks = [];
+    this.fetchRecords();
   },
 };
 </script>
