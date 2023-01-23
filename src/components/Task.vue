@@ -5,7 +5,11 @@
   >
     <h4>
       {{ info.text }}
-      <i @click="$emit('delete-item', info?.id)" class="fas fa-times"></i>
+      <i
+        @click="$emit('delete-item', info?.id)"
+        class="fas fa-times"
+        title="Delete item"
+      ></i>
     </h4>
     <p>{{ info.day }}</p>
   </div>
@@ -20,7 +24,7 @@ export default {
 };
 </script>
 
-<style scope>
+<style scoped>
 .fas {
   color: red;
 }

@@ -1,5 +1,5 @@
 <template>
-  <button class="btn" :style="{ background: color }" @click="onAdd()">
+  <button class="btn" :style="{ background: color }" @click="toggleShowAdd()">
     {{ text }}
   </button>
 </template>
@@ -10,9 +10,7 @@ export default {
   props: {
     text: String,
     color: String,
-  },
-  methods: {
-    onAdd() {},
+    toggleShowAdd: Function,
   },
 };
 </script>

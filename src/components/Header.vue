@@ -1,7 +1,11 @@
 <template>
   <header>
     <h2>{{ heading }}</h2>
-    <Button color="green" text="+ Add" />
+    <Button
+      :color="showAddForm ? 'orangered' : 'green'"
+      :toggleShowAdd="toggleShowAdd"
+      :text="showAddForm ? 'Close' : '+ Add'"
+    />
   </header>
 </template>
 
@@ -11,6 +15,8 @@ export default {
   name: "Header",
   props: {
     heading: String,
+    showAddForm: Function,
+    toggleShowAdd: Function,
   },
   components: {
     Button,
